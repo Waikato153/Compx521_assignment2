@@ -38,10 +38,10 @@ public class XGBoost extends RandomizableIteratedSingleClassifierEnhancer implem
 
     /** String describing default classifier. */
     protected String defaultClassifierString() { return "weka.classifiers.rules.XGBoostRules"; }
-
+    //protected String defaultClassifierString() { return "weka.classifiers.trees.XGBoostTree"; }
     /** Default constructor setting the default classifier. */
     public XGBoost() { m_Classifier = new weka.classifiers.rules.XGBoostRules(); }
-
+    //public XGBoost() { m_Classifier = new weka.classifiers.trees.XGBoostTree(); }
     /**
      * Provides an enumeration of the additional measures supplied by the base learner (if any).
      */
