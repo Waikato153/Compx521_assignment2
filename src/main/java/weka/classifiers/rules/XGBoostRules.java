@@ -51,7 +51,7 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
 
     public double getLambda() { return lambda; }
 
-    private double gamma = 0.0;
+    private double gamma = 1.0;
 
     @OptionMetadata(displayName = "gamma", description = "gamma",
             commandLineParamName = "gamma", commandLineParamSynopsis = "-gamma <double>", displayOrder = 3)
