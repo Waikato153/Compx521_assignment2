@@ -130,7 +130,7 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
      */
     private class SplitSpecification {
         private String operator;
-        private final Attribute attribute;
+        private Attribute attribute;
         private double splitPoint;
         private double splitQuality;
 
@@ -190,10 +190,6 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
      */
     private SplitSpecification findBestSplitPoint(int[] indices, Attribute attribute, SufficientStatistics initialStats) {
         var statsLeft = new SufficientStatistics(0.0, 0.0);
-
-        var statsNew = new SufficientStatistics(0.0, 0.0);
-
-
         var statsRight = new SufficientStatistics(initialStats.sumOfNegativeGradients, initialStats.sumOfHessians);
         var splitSpecification = new SplitSpecification(attribute, 1e-6, Double.NEGATIVE_INFINITY, "<=");
         var previousValue = Double.NEGATIVE_INFINITY;
@@ -238,7 +234,7 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
         for (int i : indices) {
             stats.updateStats(data.instance(i).classValue(), data.instance(i).weight(), true);
         }
-        if (stats.sumOfHessians <= 0.0 || stats.sumOfHessians < min_child_weight || depth >= max_depth) {
+        if (stats.sumOfHessians <= 0.0 || stats.sumOfHessians < min_child_weight || depth >= max_depth + 1) {
             return new LeafNode(eta * stats.sumOfNegativeGradients / (stats.sumOfHessians + lambda), false);
         }
         var bestSplitSpecification = new SplitSpecification(null, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, "<=");
@@ -252,17 +248,19 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
             Collections.shuffle(attributes, random);
         }
 
-
-
         for (Integer index : attributes.subList(0, (int) (colsample_bynode * attributes.size()))) {
             var splitSpecification = findBestSplitPoint(indices, data.attribute(index), stats);
             if (splitSpecification.splitQuality > bestSplitSpecification.splitQuality) {
                 bestSplitSpecification = splitSpecification;
             }
         }
-        if (bestSplitSpecification.splitQuality <= 1e-6) {
+        if (false) {
             return new LeafNode(eta * stats.sumOfNegativeGradients / (stats.sumOfHessians + lambda), false);
         } else {
+            if (bestSplitSpecification.splitQuality <= 1e-6) {
+                bestSplitSpecification.attribute = data.attribute(0);
+                bestSplitSpecification.operator = ">";
+            }
             var leftSubset = new ArrayList<Integer>(indices.length);
             var rightSubset = new ArrayList<Integer>(indices.length);
             for (int i : indices) {
@@ -303,9 +301,10 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
         if (subsample < 1.0) {
             this.data.randomize(random);
         }
+
         this.data = new Instances(this.data, 0, (int) (subsample * this.data.numInstances()));
 
-        RulesList.add(new RuleNode("1", "==", "1"));
+        this.data.resample(random);
 
         rootNode = makeTree(IntStream.range(0, this.data.numInstances()).toArray(), 0);
         data = null;
@@ -354,6 +353,7 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
         if ((node.rightSuccessor instanceof InternalNode && left == false) || (node.leftSuccessor instanceof InternalNode && left == true)) {
             sb.append("\n");
             sb.append(node.attribute.name() + (left ? " <= " : " > ") + Utils.doubleToString(node.splitPoint, getNumDecimalPlaces()));
+
             sb.append(" AND  ");
         }
         toString(sb, level + 1, left ? node.leftSuccessor : node.rightSuccessor);
