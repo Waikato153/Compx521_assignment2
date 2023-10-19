@@ -51,7 +51,7 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
 
     public double getLambda() { return lambda; }
 
-    private double gamma = 1.0;
+    private double gamma = 0.0;
 
     @OptionMetadata(displayName = "gamma", description = "gamma",
             commandLineParamName = "gamma", commandLineParamSynopsis = "-gamma <double>", displayOrder = 3)
@@ -254,13 +254,9 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
                 bestSplitSpecification = splitSpecification;
             }
         }
-        if (false) {
+        if (bestSplitSpecification.splitQuality <= 1e-6) {
             return new LeafNode(eta * stats.sumOfNegativeGradients / (stats.sumOfHessians + lambda), false);
         } else {
-            if (bestSplitSpecification.splitQuality <= 1e-6) {
-                bestSplitSpecification.attribute = data.attribute(0);
-                bestSplitSpecification.operator = ">";
-            }
             var leftSubset = new ArrayList<Integer>(indices.length);
             var rightSubset = new ArrayList<Integer>(indices.length);
             for (int i : indices) {
@@ -338,11 +334,13 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
      * Returns the number of leaves in the tree.
      */
     public int getNumLeaves(Node node) {
-        if (node instanceof LeafNode) {
-            return 1;
-        } else {
-            return getNumLeaves(((InternalNode)node).leftSuccessor) + getNumLeaves(((InternalNode)node).rightSuccessor);
-        }
+        return 1;
+//        if (node instanceof LeafNode) {
+//            //return 1;
+//        } else {
+//            //return de
+//            //return getNumLeaves(((InternalNode)node).leftSuccessor) + getNumLeaves(((InternalNode)node).rightSuccessor);
+//        }
     }
 
     /**
@@ -366,17 +364,13 @@ public class XGBoostRules extends RandomizableClassifier implements WeightedInst
     private void toString(StringBuffer sb, int level, Node node) {
         if (node instanceof LeafNode) {
             if (((LeafNode) node).deadPoint == false) {
-                sb.append(": " + Utils.doubleToString(((LeafNode) node).prediction, getNumDecimalPlaces()));
+                sb.append(": " + Utils.doubleToString(((LeafNode) node).prediction, 8));
             } else {
                 sb.append("");
             }
         } else {
-            var ruleNode = (InternalNode) node;
             branchToString(sb, true, level, (InternalNode) node);
-
             branchToString(sb, false, level, (InternalNode) node);
-
-
         }
     }
 
