@@ -1,0 +1,34 @@
+Tester:     weka.experiment.PairedCorrectedTTester -G 4,5,6 -D 1 -R 2 -S 0.05 -result-matrix "weka.experiment.ResultMatrixPlainText -mean-prec 2 -stddev-prec 2 -col-name-width 0 -row-name-width 25 -mean-width 0 -stddev-width 0 -sig-width 0 -count-width 5 -print-col-names -print-row-names -enum-col-names"
+Analysing:  Percent_correct
+Datasets:   14
+Resultsets: 3
+Confidence: 0.05 (two tailed)
+Sorted by:  -
+Date:       19/10/23, 10:49 pm
+
+
+Dataset                   (1) sklearn.S | (2) meta.X (3) meta.L
+---------------------------------------------------------------
+balance-scale-weka.filter(100)    95.68 |    95.70      88.46 *
+wisconsin-breast-cancer-w(100)    96.31 |    96.51      95.40  
+pima_diabetes-weka.filter(100)    72.94 |    75.68 v    74.29  
+ecoli-weka.filters.unsupe(100)    95.83 |    95.77      94.56  
+Glass-weka.filters.unsupe(100)    82.63 |    79.92      76.47  
+ionosphere-weka.filters.u(100)    92.76 |    92.91      90.86  
+iris-weka.filters.unsuper(100)   100.00 |   100.00     100.00  
+optdigits-weka.filters.un(100)    99.19 |    99.08      98.87 *
+pendigits-weka.filters.un(100)    99.70 |    99.54 *    99.48 *
+segment-weka.filters.unsu(100)    99.70 |    99.48      99.55  
+sonar-weka.filters.unsupe(100)    83.00 |    82.43      73.37 *
+vehicle-weka.filters.unsu(100)    98.40 |    97.93      97.39 *
+'vowel-weka.filters.unsup(100)    99.11 |    99.01      98.88  
+waveform-weka.filters.uns(100)    88.41 |    88.75      85.92 *
+---------------------------------------------------------------
+                                (v/ /*) |   (1/12/1)    (0/8/6)
+
+
+Key:
+(1) sklearn.ScikitLearnClassifier '-batch 100 -learner XGBClassifier -parameters \"gamma=1,subsample=0.5,colsample_bynode=0.5,tree_method=\\\"exact\\\"\" -py-command python3 -py-path default -server-name none' -6212485658537766441
+(2) meta.XGBoost '-S 1 -I 100 -W rules.XGBoostRules -- -S 1 -colsample_bynode 0.5 -eta 0.3 -gamma 1.0 -lambda 1.0 -max_depth 6 -min_child_weight 1.0 -subsample 0.5' -7904453909409312251
+(3) meta.LogitBoost '-P 100 -L -1.7976931348623157E308 -H 1.0 -Z 3.0 -O 1 -E 1 -S 1 -I 10 -W trees.REPTree -- -M 2 -V 0.001 -N 3 -S 1 -L -1 -I 0.0' -1105660358715833753
+
