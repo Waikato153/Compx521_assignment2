@@ -1,0 +1,32 @@
+Tester:     weka.experiment.PairedCorrectedTTester -G 4,5,6 -D 1 -R 2 -S 0.05 -result-matrix "weka.experiment.ResultMatrixPlainText -mean-prec 2 -stddev-prec 2 -col-name-width 0 -row-name-width 25 -mean-width 2 -stddev-width 2 -sig-width 1 -count-width 5 -print-col-names -print-row-names -enum-col-names"
+Analysing:  Root_relative_squared_error
+Datasets:   14
+Resultsets: 1
+Confidence: 0.05 (two tailed)
+Sorted by:  -
+Date:       20/10/23, 2:38 pm
+
+
+Dataset                   (1) sklearn.Sci
+-----------------------------------------
+2dplanes                 (100)    23.26 |
+bank8FM                  (100)    31.49 |
+cpu_act                  (100)    13.57 |
+cpu_small                (100)    16.10 |
+delta_ailerons           (100)   100.00 |
+delta_elevators          (100)   100.00 |
+diabetes_numeric         (100)    89.20 |
+kin8nm                   (100)    60.04 |
+machine_cpu              (100)    35.26 |
+puma8NH                  (100)    63.11 |
+pyrim                    (100)    99.81 |
+stock                    (100)    14.57 |
+triazines                (100)    99.88 |
+wisconsin                (100)   110.55 |
+-----------------------------------------
+(v/ /*)                                 |
+
+
+Key:
+(1) sklearn.ScikitLearnClassifier '-batch 100 -learner XGBRegressor -parameters \"gamma=1,subsample=0.5,colsample_bynode=0.5,tree_method=\\\"exact\\\"\" -py-command python3 -py-path default -server-name none' -6212485658537766900
+
